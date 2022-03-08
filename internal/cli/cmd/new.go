@@ -16,7 +16,7 @@ import (
 
 // New adds a new note to the notebook.
 type New struct {
-	Directory   string            `arg optional default:"." help:"Directory in which to create the note."`
+	Directory   string            `arg optional default:"." help:"Directory in which to create the note." predictor:"notebookDirs"`
 	Interactive bool              `short:i                  help:"Read contents from standard input."`
 	Title       string            `short:t   placeholder:TITLE help:"Title of the new note."`
 	Date        string            `          placeholder:DATE  help:"Set the current date."`

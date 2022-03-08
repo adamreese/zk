@@ -21,12 +21,14 @@ require (
 	github.com/mvdan/xurls v1.1.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
+	github.com/posener/complete v1.2.3
 	github.com/relvacode/iso8601 v1.1.0
 	github.com/rvflash/elapsed v0.2.0
 	github.com/schollz/progressbar/v3 v3.8.6
 	github.com/tj/go-naturaldate v1.3.0
 	github.com/tliron/glsp v0.1.1
 	github.com/tliron/kutil v0.1.59
+	github.com/willabides/kongplete v0.3.0
 	github.com/yuin/goldmark v1.4.12
 	github.com/yuin/goldmark-meta v1.1.0
 	gopkg.in/djherbis/times.v1 v1.3.0
@@ -35,6 +37,8 @@ require (
 require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/gosimple/unidecode v1.0.1 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
@@ -43,6 +47,7 @@ require (
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/petermattis/goid v0.0.0-20220526132513-07eaf5d0b9f4 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/riywo/loginshell v0.0.0-20200815045211-7d26008be1ab // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
 	github.com/sourcegraph/jsonrpc2 v0.1.0 // indirect

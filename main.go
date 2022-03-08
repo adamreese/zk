@@ -12,6 +12,9 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kong"
+	"github.com/posener/complete"
+	"github.com/willabides/kongplete"
+
 	"github.com/mickael-menu/zk/internal/cli"
 	"github.com/mickael-menu/zk/internal/cli/cmd"
 	"github.com/mickael-menu/zk/internal/core"
@@ -22,7 +25,7 @@ var Version = "dev"
 var Build = "dev"
 
 var root struct {
-	Init  cmd.Init  `cmd group:"zk" help:"Create a new notebook in the given directory."`
+	Init  cmd.Init  `cmd group:"zk" help:"Create a new notebook in the given directory." type:"path" predictor:"dirs"`
 	Index cmd.Index `cmd group:"zk" help:"Index the notes to be searchable."`
 
 	New   cmd.New   `cmd group:"notes" help:"Create a new note in the given notebook directory."`
@@ -31,8 +34,8 @@ var root struct {
 	Edit  cmd.Edit  `cmd group:"notes" help:"Edit notes matching the given criteria."`
 	Tag   cmd.Tag   `cmd group:"notes" help:"Manage the note tags."`
 
-	NotebookDir string  `type:path placeholder:PATH help:"Turn off notebook auto-discovery and set manually the notebook where commands are run."`
-	WorkingDir  string  `short:W type:path placeholder:PATH help:"Run as if zk was started in <PATH> instead of the current working directory."`
+	NotebookDir string  `type:path placeholder:PATH help:"Turn off notebook auto-discovery and set manually the notebook where commands are run." predictor:"dirs"`
+	WorkingDir  string  `short:W type:path placeholder:PATH help:"Run as if zk was started in <PATH> instead of the current working directory." predictor:"dirs"`
 	NoInput     NoInput `help:"Never prompt or ask for confirmation."`
 	// ForceInput is a debugging flag overriding the default value of interaction prompts.
 	ForceInput string `hidden xor:"input"`
@@ -42,6 +45,8 @@ var root struct {
 	ShowHelp ShowHelp         `cmd hidden default:"1"`
 	LSP      cmd.LSP          `cmd hidden`
 	Version  kong.VersionFlag `hidden help:"Print zk version."`
+
+	InstallCompletions kongplete.InstallCompletions `cmd help:"install shell completions" hidden`
 }
 
 // NoInput is a flag preventing any user prompt when enabled.
@@ -88,6 +93,12 @@ func main() {
 	} else {
 		parser, err := kong.New(&root, options(container)...)
 		fatalIfError(err)
+
+		kongplete.Complete(parser,
+			kongplete.WithPredictor("dirs", complete.PredictDirs("*")),
+			kongplete.WithPredictor("notebookDirs", PredictNotebookDirs(container.WorkingDir)),
+		)
+
 		ctx, err := parser.Parse(args)
 		fatalIfError(err)
 
@@ -327,4 +338,30 @@ func parseDirs(args []string) (cli.Dirs, []string, error) {
 	}
 
 	return d, args, nil
+}
+
+func PredictNotebookDirs(root string) complete.Predictor {
+	return complete.PredictFunc(func(_ complete.Args) []string {
+		var dirs []string
+		filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			// skip the working directory
+			if path == root {
+				return nil
+			}
+			// skip the .zk config directory
+			if info.Name() == ".zk" {
+				return filepath.SkipDir
+			}
+			if info.IsDir() {
+				// get the relative path
+				relPath, _ := filepath.Rel(root, path)
+				dirs = append(dirs, relPath)
+			}
+			return nil
+		})
+		return dirs
+	})
 }

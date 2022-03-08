@@ -6,6 +6,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/terminal"
+
 	"github.com/mickael-menu/zk/internal/cli"
 	"github.com/mickael-menu/zk/internal/core"
 	"github.com/mickael-menu/zk/internal/util/strings"
@@ -13,7 +14,7 @@ import (
 
 // Init creates a notebook in the given directory
 type Init struct {
-	Directory string `arg optional type:"path" default:"." help:"Directory containing the notebook."`
+	Directory string `arg optional type:"path" default:"." help:"Directory containing the notebook." predictor:"dirs"`
 }
 
 func (cmd *Init) Run(container *cli.Container) error {
