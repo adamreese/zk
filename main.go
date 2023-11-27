@@ -97,6 +97,7 @@ func main() {
 		kongplete.Complete(parser,
 			kongplete.WithPredictor("dirs", complete.PredictDirs("*")),
 			kongplete.WithPredictor("notebookDirs", PredictNotebookDirs(container.WorkingDir)),
+			kongplete.WithPredictor("groups", PredictGroups(container)),
 		)
 
 		ctx, err := parser.Parse(args)
@@ -363,5 +364,15 @@ func PredictNotebookDirs(root string) complete.Predictor {
 			return nil
 		})
 		return dirs
+	})
+}
+
+func PredictGroups(container *cli.Container) complete.Predictor {
+	return complete.PredictFunc(func(_ complete.Args) []string {
+		var groups []string
+		for name, _ := range container.Config.Groups {
+			groups = append(groups, name)
+		}
+		return groups
 	})
 }

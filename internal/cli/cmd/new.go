@@ -20,7 +20,7 @@ type New struct {
 	Interactive bool              `short:i                  help:"Read contents from standard input."`
 	Title       string            `short:t   placeholder:TITLE help:"Title of the new note."`
 	Date        string            `          placeholder:DATE  help:"Set the current date."`
-	Group       string            `short:g   placeholder:NAME  help:"Name of the config group this note belongs to. Takes precedence over the config of the directory."`
+	Group       string            `short:g   placeholder:NAME  help:"Name of the config group this note belongs to. Takes precedence over the config of the directory." predictor:"groups"`
 	Extra       map[string]string `                            help:"Extra variables passed to the templates." mapsep:","`
 	Template    string            `          placeholder:PATH  help:"Custom template used to render the note."`
 	PrintPath   bool              `short:p                     help:"Print the path of the created note instead of editing it."`
